@@ -24,6 +24,7 @@ function compareDate(a, b) {
   return compareShift(a, b);
 }
 
+// returns the unique names of the input data
 getUniqueNames = (data) => {
   let set = new Set();
   for(let i = 0; i < data.length; i++) {
@@ -42,6 +43,9 @@ getNumberOfVolunteers = (data) => {
   return Array.from(set).length;
 }
 
+// forms a map by associating each unique volunteer's name with an integer
+// ranging from 0 to total number of unique volunteers to be used 
+// as index of the adjacency matrix and returns the formed map.
 formMap = (data) => {
   uniqueNames = Array.from(getUniqueNames(data));
   let map = new Map();
@@ -52,6 +56,12 @@ formMap = (data) => {
   return map;
 }
 
+// 1. the parameter "connectedVolunteers" contains the objects of volunteers 
+// who have worked on the same shift in a particular day
+// 2. map<String, int> maps each volunteers name to a integer to used as an index
+// in the adjacency matrix, "graph"
+// This function increments the corresponding entry in the adjacency matrix(graph)
+// of the volunteers who are present in "connectedVolunteers".
 updateGraph = (graph, connectedVolunteers, map) => {
   for(let i = 0; i < connectedVolunteers.length; i++) {
     for(let j = 0; j < connectedVolunteers.length; j++) {
@@ -64,6 +74,7 @@ updateGraph = (graph, connectedVolunteers, map) => {
   // console.log(graph);
 }
 
+// outputs the result stored in "graph" in a csv file called "output.csv"
 writeToCSV = (graph, volunteers) => {
   const createCsvWriter = require("csv-writer").createObjectCsvWriter;
   const csvWriter = createCsvWriter({
@@ -104,6 +115,7 @@ solve = (inputData) => {
               .fill()
               .map(() => Array(numberOfVolunteers).fill(0));
 
+  // volunteers who worked on the same shift on the same day
   let connectedVolunteers = [];
   connectedVolunteers.push(inputData[0]);
 
